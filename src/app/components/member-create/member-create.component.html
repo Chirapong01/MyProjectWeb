@@ -1,0 +1,280 @@
+<!-- รายชื่อสมาชิก -->
+<div class="card-body">
+    <div class="row mb-2 ml-1 mr-1">
+        <div class="col">
+            <div class="row">
+                <div class="input-group w-350px">
+                    <input [(ngModel)]="searchText" class="form-control w-200px bg-invisible" placeholder="ค้นหาข้อมูลสมาชิก" type="text">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-member dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            ประเภทสมาชิก
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" (click)="checkFilterType('standard')">ลูกค้าทั่วไป</a>
+                            <a class="dropdown-item" (click)="checkFilterType('member')">สมาชิก</a>
+                            <a class="dropdown-item" (click)="checkFilterType('vip')">ลูกค้า VIP</a>
+                            <a class="dropdown-item" (click)="checkFilterType('all')">ดูทั้งหมด</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="row float-right">
+                <button class="btn btn-outline-success mb-2" data-toggle="modal" data-target="#newMember">
+                    <div class="form-inline">
+                        <div class="mr-2">สมัครสมาชิก</div>
+                        <div class="material-icons">add_circle_outline</div>
+                    </div>
+
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <mat-spinner class="spiner" *ngIf="receiveCustomer==null"></mat-spinner>
+        <table class="table table-bordered " *ngIf="receiveCustomer!=null" id="table-center">
+            <thead class="text-success" id="head-style">
+                <tr>
+                    <th scope="col">รหัสลูกค้า</th>
+                    <th scope="col">ชื่อลูกค้า</th>
+                    <th scope="col">ชื่อร้าน</th>
+                    <th scope="col">ที่อยู่</th>
+                    <th scope="col">เบอร์โทรลูกค้า</th>
+                    <th scope="col">คะแนน</th>
+                    <th scope="col">ประเภทลูกค้า</th>
+                    <th scope="col">ข้อมูล/แก้ไข</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let ctm of receiveCustomer | paginate : config | filter:searchText||filterType">
+                <tr>
+                    <td>{{ctm.customerId}}</td>
+                    <td class="text-left">{{ctm.customerName}}</td>
+                    <td class="text-left">{{ctm.customerStoreName}}</td>
+                    <td class="text-left">{{ctm.address}}</td>
+                    <td>{{ctm.customerTel}}</td>
+                    <td>{{ctm.score}}</td>
+                    <td *ngIf="ctm.type == 'standard'">ลูกค้าทั่วไป</td>
+                    <td *ngIf="ctm.type == 'member'">สมาชิก</td>
+                    <td *ngIf="ctm.type == 'vip'">ลูกค้า VIP</td>
+                    <td text-center>
+                        <div class="btn-group">
+                            <div class="text-313131 material-icons mr-3" type="button" data-toggle="modal" title="แสดงข้อมูล" data-target="#dataMore" (click)="isReadonlyAndGetData('true',ctm.customerId)">menu</div>
+                            <div class="text-8D6E63 material-icons" type="button" data-toggle="modal" title="แก้ไขข้อมูล" data-target="#showEdit" (click)="isReadonlyAndGetData('false',ctm.customerId)">edit</div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="pagination float-right">
+            <pagination-controls maxSize="7" responsiv="true" previousLabel="ก่อนหน้า" nextLabel="ถัดไป" (pageChange)="onPageChange($event)">
+            </pagination-controls>
+        </div>
+    </div>
+</div>
+
+
+<!-- สมัครสมาชิก -->
+<div class="modal fade" id="newMember" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="memberModal">สมัครสมาชิก</div>
+                <button type="button" #closebuttonRegister class="close" hidden="true" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="formAdd" (ngSubmit)="createMember()">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="customerId">รหัสลูกค้า</label>
+                            <input formControlName="customerId" [ngClass]="{'is-invalid': submitAdd && formValidAdd.customerId.errors}" type="text" class="form-control">
+                            <div class="invalid-feedback" *ngIf="submitAdd && formValidAdd.customerId.errors">
+                                <div *ngIf="formValidAdd.customerId.errors.required">กรุณากรอกรหัสสินค้า</div>
+                                <div *ngIf="formValidAdd.customerId.errors.pattern">a-z 0-9</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="customerName">ชื่อลูกค้า</label>
+                            <input formControlName="customerName" [ngClass]="{'is-invalid': submitAdd && formValidAdd.customerName.errors}" type="text" class="form-control">
+                            <div class="invalid-feedback" *ngIf="submitAdd && formValidAdd.customerName.errors">
+                                <div *ngIf="formValidAdd.customerName.errors.required">กรุณากรอกชื่อลูกค้า</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="customerStoreName">ชื่อร้าน</label>
+                            <input formControlName="customerStoreName" [ngClass]="{'is-invalid': submitAdd && formValidAdd.customerStoreName.errors}" type="text" class="form-control">
+                            <div class="invalid-feedback" *ngIf="submitAdd && formValidAdd.customerStoreName.errors">
+                                <div *ngIf="formValidAdd.customerStoreName.errors.required">กรุณากรอกชื่อร้าน</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="customerTel">เบอร์โทรลูกค้า</label>
+                            <input formControlName="customerTel" [ngClass]="{'is-invalid': submitAdd && formValidAdd.customerTel.errors}" type="text" class="form-control">
+                            <div class="invalid-feedback" *ngIf="submitAdd && formValidAdd.customerTel.errors">
+                                <div *ngIf="formValidAdd.customerTel.errors.required">กรุณากรอกเบอร์โทร</div>
+                                <div *ngIf="formValidAdd.customerTel.errors.pattern">กรุณากรอกเฉพาะตัวเลข 0-9</div>
+                                <div *ngIf="formValidAdd.customerTel.errors.minlength">กรุณากรอกให้ครบ</div>
+                                <div *ngIf="formValidAdd.customerTel.errors.maxlength">กรุณากรอกให้ครบ</div>
+                            </div>
+                        </div>
+                        <div class="form-group col">
+                            <label for="address">ที่อยู่</label>
+                            <input formControlName="address" [ngClass]="{'is-invalid': submitAdd && formValidAdd.address.errors}" type="text" class="form-control">
+                            <div class="invalid-feedback" *ngIf="submitAdd && formValidAdd.address.errors">
+                                <div *ngIf="formValidAdd.address.errors.required">กรุณากรอกที่อยู่</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label for="type">ประเภทลูกค้า</label>
+                            <select formControlName="type" [ngClass]="{'is-invalid': submitAdd && formValidAdd.type.errors}" class="custom-select form-control">
+                                <option [disabled]="true" selected>เลือกประเภทลูกค้า</option>
+                                <option value="standard">ลูกค้าทั่วไป</option>
+                                <option value="member">สมาชิก</option>
+                                <option value="vip">ลูกค้า VIP</option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="submitAdd && formValidAdd.type.errors">
+                                <div *ngIf="formValidAdd.type.errors.required">กรุณาเลือกประเภทลูกค้า</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="remark">หมายเหตุ</label>
+                            <input formControlName="remark" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-outline-primary">ตกลง</button>
+                        <button type="button" class="btn btn-outline-secondary" (click)="closeMember()" data-dismiss="modal">ยกเลิก</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- แก้ไขข้อมูลสมาชิก -->
+<div class="modal fade" id="showEdit" area-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="memberModal">ข้อมูลสมาชิก</div>
+                <button type="button" #closebuttonDelete class="close" hidden="true" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="formReceive" (ngSubmit)="editCustomer(formReceive.value.customerId)">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="customerId">รหัสลูกค้า</label>
+                            <input formControlName="customerId" disabled="true" [readOnly]="_readOnly" type="text" class="form-control">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="customerName">ชื่อลูกค้า</label>
+                            <input formControlName="customerName" [ngClass]="{'is-invalid': submitEdit&& fromValidEdit.customerName.errors}" [readOnly]="_readOnly" type="text" class="form-control">
+                            <div class="invalid-feedback" *ngIf="submitEdit&& fromValidEdit.customerName.errors">
+                                <div *ngIf="fromValidEdit.customerName.errors.required">กรุณากรอกชื่อลูกค้า</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="customerStoreName">ชื่อร้าน</label>
+                            <input formControlName="customerStoreName" [ngClass]="{'is-invalid': submitEdit&& fromValidEdit.customerStoreName.errors}" [readOnly]="_readOnly" type="text" class="form-control">
+                            <div class="invalid-feedback" *ngIf="submitEdit&& fromValidEdit.customerStoreName.errors">
+                                <div *ngIf="fromValidEdit.customerStoreName.errors.required">กรุณากรอกชื่อร้าน</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="customerTel">เบอร์โทรลูกค้า</label>
+                            <input formControlName="customerTel" [ngClass]="{'is-invalid': submitEdit&& fromValidEdit.customerTel.errors}" [readOnly]="_readOnly" type="text" class="form-control">
+                            <div class="invalid-feedback" *ngIf="submitEdit&& fromValidEdit.customerTel.errors">
+                                <div *ngIf="fromValidEdit.customerTel.errors.required">กรุณากรอกเบอร์โทร</div>
+                                <div *ngIf="fromValidEdit.customerTel.errors.pattern">กรุณากรอกเฉพาะตัวเลข 0-9</div>
+                                <div *ngIf="fromValidEdit.customerTel.errors.minlength">กรุณากรอกให้ครบ</div>
+                                <div *ngIf="fromValidEdit.customerTel.errors.maxlength">กรุณากรอกให้ครบ</div>
+                            </div>
+                        </div>
+                        <div class="form-group col">
+                            <label for="address">ที่อยู่</label>
+                            <input formControlName="address" [ngClass]="{'is-invalid': submitEdit&& fromValidEdit.address.errors}" [readOnly]="_readOnly" type="text" class="form-control">
+                            <div class="invalid-feedback" *ngIf="submitEdit&& fromValidEdit.address.errors">
+                                <div *ngIf="fromValidEdit.address.errors.required">กรุณากรอกที่อยู่</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label for="score">แต้มสะสม</label>
+                            <input formControlName="score" [ngClass]="{'is-invalid': submitEdit&& fromValidEdit.score.errors}" [readOnly]="_readOnly" type="number" class="form-control">
+                            <div class="invalid-feedback" *ngIf="submitEdit&& fromValidEdit.score.errors">
+                                <div *ngIf="fromValidEdit.score.errors.required">กรุณากรอกแต้มสะสม</div>
+                                <div *ngIf="fromValidEdit.score.errors.pattern">กรุณากรอกเฉพาะตัวเลข 0-9</div>
+                            </div>
+                        </div>
+                        <div class="form-group col">
+                            <label for="type">ประเภทลูกค้า</label>
+                            <select formControlName="type" class="custom-select form-control">
+                                <option [disabled]="true" selected>เลือกประเภทลูกค้า</option>
+                                <option value="standard">ลูกค้าทั่วไป</option>
+                                <option value="member">สมาชิก</option>
+                                <option value="vip">ลูกค้า VIP</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="remark">หมายเหตุ</label>
+                            <input formControlName="remark" [readOnly]="_readOnly" type="text" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer row">
+                        <div class="float-left col">
+                            <button type="button" class="btn btn-outline-danger" (click)="deleteCustomer(formReceive.value.customerId)" [hidden]="_readOnly">ลบสมาชิก</button>
+                        </div>
+                        <button class="col" type="submit" class="btn btn-outline-primary" [hidden]="_readOnly">ยืนยัน</button>
+                        <button class="col" type="button" class="btn btn-outline-secondary" (click)="closeMember()" data-dismiss="modal">ยกเลิก</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- แสดงข้อมูล -->
+<div class="modal fade" id="dataMore" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-313131">
+                <div class="text-light mt-2 h1-center">
+                    <h1>แสดงข้อมูลสมาชิก</h1>
+                </div>
+            </div>
+            <div class="modal-body font-16" *ngIf="receiveCustomerId != null">
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <label class="col-5">รหัสลูกค้า: {{receiveCustomerId.customerId}}</label>
+                            <label class="col">เบอร์โทรลูกค้า: {{receiveCustomerId.customerTel}}</label>
+                        </div>
+                        <div class="row">
+                            <label class="col-5">ชื่อลูกค้า: {{receiveCustomerId.customerName}}</label>
+                            <label class="col">คะแนน: {{receiveCustomerId.score}}</label>
+                        </div>
+                        <div class="row">
+                            <label class="col-5">ชื่อร้าน: {{receiveCustomerId.customerStoreName}}</label>
+                            <label class="col" *ngIf="receiveCustomerId.type == 'standard'">ประเภทลูกค้า:
+                                ลูกค้าทั่วไป</label>
+                            <label class="col" *ngIf="receiveCustomerId.type == 'member'">ประเภทลูกค้า: สมาชิก</label>
+                            <label class="col" *ngIf="receiveCustomerId.type == 'vip'">ประเภทลูกค้า: ลูกค้า VIP</label>
+                        </div>
+                        <div class="row">
+                            <label class="col-5">ที่อยู่: {{receiveCustomerId.address}}</label>
+                            <label class="col">หมายเหตุ: {{receiveCustomerId.remark}}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

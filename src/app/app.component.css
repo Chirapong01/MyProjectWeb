@@ -1,0 +1,89 @@
+#mainpage-menu {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.card {
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px 2px #313131;
+    border: 0px;
+}
+
+.body {
+    background-color: white;
+    height: 100%;
+    width: 100%;
+}
+
+.card-head {
+    background-color: #313131;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px
+}
+
+.fstlogoShop {
+    color: #00b800;
+    font-size: xx-large;
+    font-weight: bold;
+    cursor: default;
+}
+
+.secLogoShop {
+    color: snow;
+    font-size: xx-large;
+    font-weight: bold;
+    cursor: default;
+}
+
+.menuBar {
+    font-size: large;
+    font-weight: bold;
+}
+
+.container-mainpage {
+    margin: auto;
+    padding: 0%;
+}
+
+.wrapper {
+    height: 100vh;
+}
+
+#navStyle {
+    width: 100%;
+    background: #313131;
+    padding: 20px;
+    border-bottom: 1px solid rgb(192, 190, 190);
+    box-shadow: 0 1 rgb(177, 175, 175);
+    box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
+}
+
+.navbar {
+    padding: 0%;
+    margin-right: 5px;
+}
+
+.btn-outline-secondary {
+    color: rgba(255, 255, 255, 0.5);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.btn-outline-secondary:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.text {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.changestyle {
+    color: white;
+}
+
+.active {
+    color: white;
+}
+
+#col {
+    background-color: white;
+}

@@ -1,0 +1,13 @@
+Veiw Page
+Table 
+  -   บิลที่ทำรายการไปแล้ว
+ - stock
+ - form product
+ 
+Chart
+ - form daily income
+
+
+Install
+npm install chart.js
+ng add @angular/material

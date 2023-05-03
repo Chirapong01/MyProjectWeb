@@ -1,0 +1,170 @@
+<div class="container-fluid card-style">
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col">
+                <div class="float-left">
+                    <div class="input-group">
+                        <mat-form-field appearance="outline" class="zoom-0.8">
+                            <mat-label>วัน/เดือน/ปี</mat-label>
+                            <mat-date-range-input [formGroup]="dateRage" [rangePicker]="picker">
+                                <input matStartDate formControlName="start" placeholder="Start date">
+                                <input matEndDate formControlName="end" placeholder="End date">
+                            </mat-date-range-input>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-date-range-picker #picker>
+                                <mat-date-range-picker-actions>
+                                    <button mat-button matDateRangePickerCancel>ยกเลิก</button>
+                                    <button mat-raised-button color="primary" matDateRangePickerApply (click)="findDate()">ยืนยัน</button>
+                                </mat-date-range-picker-actions>
+                            </mat-date-range-picker>
+                        </mat-form-field>
+                        <div class="btn-group ml-3 mt-1 h-50">
+                            <button class="btn  btn-outline-secondary " type="button" (click)="getDataAllSell()">รีเซ็ต</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <h1 class="text-center mt-2 text-success"> ประวัติการขาย </h1>
+            </div>
+            <div class="col">
+                <div class="float-right mt-2">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text material-icons bg-invisible">search</span>
+                        </div>
+                        <input type="text" class="form-control bg-invisible " [(ngModel)]="searchText" placeholder="ค้นหาประวัติการขาย">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <mat-spinner class="spiner" *ngIf="getAllSell==null"></mat-spinner>
+            <table class="table table-bordered " *ngIf="getAllSell!=null">
+                <thead class="text-center text-success" id="head-style">
+                    <tr>
+                        <th class="w-100px" scope="col">รหัสขาย</th>
+                        <th class="w-150px" scope="col">ชื่อร้าน</th>
+                        <th class="w-200px" scope="col">ชื่อลูกค้า</th>
+                        <th class="w-150px" scope="col">ราคาสุทธิ</th>
+                        <th class="w-150px" scope="col">ราคารวม</th>
+                        <th class="w-150px" scope="col">เงินที่รับ</th>
+                        <th class="w-150px" scope="col">เงินทอน</th>
+                        <th class="w-100px" scope="col">รายการ</th>
+                        <th class="w-150px" scope="col">วัน เดือน ปี</th>
+                        <th class="w-100px" scope="col">เวลา</th>
+                        <th class="w-100px" scope="col">เพิ่มเติม</th>
+                    </tr>
+                </thead>
+                <tbody class="text-right">
+                    <tr *ngFor="let i of getAllSell | paginate : config  | filter : searchText  ">
+                        <td class="text-center" scope="row"> {{i.sellId }}</td>
+                        <td class="text-left pl-4">{{i.shopName}}</td>
+                        <td class="text-left pl-3">{{i.customerStoreName}}</td>
+                        <td class="pr-4">{{i.netPrice}}</td>
+                        <td class="pr-4">{{i.totalPrice}}</td>
+                        <td class="pr-4">{{i.receiveMoney}}</td>
+                        <td class="pr-4">{{i.changeMoney}}</td>
+                        <td class="pr-4">{{i.listSellItem.length}}</td>
+                        <td class="text-center">{{i.creationDatetime | date:' d/M/yyyy' }}</td>
+                        <td class="text-center">{{i.creationDatetime | date:' HH:mm ' }}</td>
+                        <td class="text-center">
+                            <div class="text-313131 material-icons" style="padding-top: 7px;" type="button" data-toggle="modal" data-target="#modalbill" data-placement="top" title="แสดงข้อมูล" (click)="showBill(i.sellId)">menu</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination float-right mt-1">
+            <pagination-controls maxSize="7" responsiv="true" previousLabel="ก่อนหน้า" nextLabel="ถัดไป" (pageChange)="onPageChage($event)">
+            </pagination-controls>
+        </div>
+    </div>
+</div>
+
+<!-- modal -->
+<div class="modal fade" id="modalbill" #modalbill aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-313131">
+                <div class="text-light mt-2 h1-center">
+                    <h1>ประวัติการขาย</h1>
+                </div>
+            </div>
+            <div class="modal-body font-16" *ngIf="showbill != null">
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <label class="col">ไอดีการขาย: {{showbill.sellId}}</label>
+                        </div>
+                        <div class="row">
+                            <label class="col">ชื่อร้าน: {{showbill.shopName}}</label>
+                        </div>
+                        <div class="row">
+                            <label class="col">ชื่อลูกค้า : {{showbill.customerStoreName}}</label>
+                        </div>
+                        <div class="row">
+                            <label class="col">รหัสผู้เสียภาษี : {{showbill.taxId}}</label>
+                        </div>
+
+                    </div>
+                    <div class="col-4">
+                        <label class="row"> {{showbill.creationDatetime | date:'เวลา : HH:mm ' }}</label>
+                        <label class="row"> {{showbill.creationDatetime | date:'วันที่ : d/M/yyyy' }}</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col">
+                        <div class="product-border">
+                            <table class="text-center w-100">
+                                <thead>
+                                    <tr>
+                                        <th> รหัสสินค้า</th>
+                                        <th> ชื่อสินค้า</th>
+                                        <th> ราคา</th>
+                                        <th> จำนวน</th>
+                                        <th> ราคารวม</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngFor="let i of showbill.listSellItem">
+                                    <tr>
+                                        <td class="text-left pl-3"> {{i.productId}}</td>
+                                        <td class="text-left pl-2"> {{i.productName}}</td>
+                                        <td class="text-right pr-1"> {{i.price}}</td>
+                                        <td class="text-right pr-2"> {{i.amount}}</td>
+                                        <td class="text-right pr-3">{{i.totalPrice}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </label>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <label class="col">ราคาภาษี : {{showbill.netPrice}}</label>
+                        </div>
+
+                        <div class="row">
+                            <label class="col">ลดราคาพิเศษ : {{showbill.discount}}</label>
+                        </div>
+                        <div class="row">
+                            <label class="col">ลดราคา : {{showbill.perDiscount}} % </label>
+                        </div>
+                        <div class="row">
+                            <label class="col">ภาษี : {{showbill.vat}} %</label>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <label class="row">เงินที่รับ : {{showbill.receiveMoney}}</label>
+                        <label class="row">รวมราคา : {{showbill.totalPrice}}</label>
+                        <label class="row">เงินทอน : {{showbill.changeMoney}}</label>
+                    </div>
+                </div>
+                <button class="btn text-danger material-icons float-right" type="button" (click)="genPDF(showbill)"><span class="material-icons">
+                        picture_as_pdf
+                    </span></button>
+            </div>
+        </div>
+    </div>
+</div>

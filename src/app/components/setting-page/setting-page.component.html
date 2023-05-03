@@ -1,0 +1,206 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <p class="title-style mb-4">การตั้งค่า</p>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-2">
+            <div class="list-group" id="list-tab" role="tablist">
+                <a class="list-group-item list-group-item-action bg-invisible text d-flex" id="list-profile-list " data-toggle="list" href="#bills" role="tab" aria-controls="profile" (click)="checkColor('0')">
+                    <span class="material-icons mr-2">
+                        receipt_long
+                    </span>
+                    <p class="font-opt" [class.changestyle]='statusNav[0]'>บิล</p>
+                    <hr class="my-2">
+                </a>
+                <a class="list-group-item list-group-item-action bg-invisible text d-flex " id="list-home-list" data-toggle="list" href="#account" role="tab" aria-controls="home" (click)="checkColor('1')">
+                    <span class="material-icons mr-2">
+                        account_circle
+                    </span>
+                    <p class="font-opt " [class.changestyle]='statusNav[1]'>บัญชีผู้ใช้งาน</p>
+                    <hr class="my-2">
+                </a>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="tab-content" id="nav-tabContent">
+
+                <!-- settingbill -->
+                <div class="tab-pane fade  show active" id="bills" role="tabpanel">
+                    <form [formGroup]="editSettingSell" (ngSubmit)="editBill()">
+                        <div class="row d-flex  between mt-2 mb-2 setting-bordor">
+                            <span class="material-icons mr-2">
+                            receipt
+                        </span>
+                            <p class="font-opt">การตั้งค่าบิล</p>
+                        </div>
+                        <div class="row mt-3 mb-2">
+                            <div class="col-3 mt-2"> ชื่อร้าน</div>
+                            <div class="col-7">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control " formControlName="shopName" [readOnly]='input[0]' [ngClass]="{ 'is-invalid':  submitSettingSell && checkbill.shopName.errors && input[0] == false }">
+                                    <div class="input-group-append" *ngIf="rankuser =='ADMIN' || rankuser== 'CEO'">
+                                        <button class="btn btn-outline-secondary" type="button" (click)='toggleBtn(0)'>แก้ไข</button>
+                                    </div>
+                                    <div *ngIf=" submitSettingSell && checkbill.shopName.errors && input[0] == false" class="invalid-feedback">
+                                        <div *ngIf="checkbill.shopName.errors.required">กรุณากรอกข้อมูลให้ถูกต้อง</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row  mb-2">
+                            <div class="col-3 mt-2"> รหัสผู้เสียภาษี </div>
+                            <div class="col-7">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control " formControlName="txtId" [readOnly]='input[1]' [ngClass]="{ 'is-invalid':  submitSettingSell && checkbill.txtId.errors && input[1]==false}">
+                                    <div class="input-group-append" *ngIf="rankuser =='ADMIN' || rankuser== 'CEO'">
+                                        <button class="btn btn-outline-secondary" type="button" (click)='toggleBtn(1)'>แก้ไข</button>
+                                    </div>
+                                    <div *ngIf=" submitSettingSell && checkbill.txtId.errors && input[1] == false" class="invalid-feedback">
+                                        <div *ngIf="checkbill.txtId.errors.required">กรุณากรอกข้อมูลให้ถูกต้อง</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row  mb-2">
+                            <div class="col-3 mt-3">ตั้งค่ารหัสบิล</div>
+                            <div class="col-7">
+                                <small id="emailHelp" class="form-text text-muted mg-t-15 ">เช่น "SE01" </small>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control " formControlName="idSell" [readOnly]='input[2]' [ngClass]="{ 'is-invalid':  submitSettingSell && checkbill.idSell.errors && input[2] ==false }">
+                                    <div class="input-group-append" *ngIf="rankuser =='ADMIN' || rankuser== 'CEO' || rankuser=='SELL' ">
+                                        <button class="btn btn-outline-secondary" type="button" (click)='toggleBtn(2)'>แก้ไข</button>
+                                    </div>
+                                    <div *ngIf=" submitSettingSell && checkbill.idSell.errors && input[2] == false" class="invalid-feedback">
+                                        <div *ngIf="checkbill.idSell.errors.required">กรุณากรอกข้อมูลให้ถูกต้อง</div>
+                                        <div *ngIf="checkbill.idSell.errors.minlength">กรุณากรอกให้ครบ 4 ตัว</div>
+                                        <div *ngIf="checkbill.idSell.errors.maxlength">กรุณาห้ามเกิน 4 ตัว</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row  mb-2">
+                            <div class="col-3 mt-2">VAT % </div>
+                            <div class="col-7">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control " formControlName="vat" [readOnly]='input[3]' [ngClass]="{ 'is-invalid':  submitSettingSell && checkbill.vat.errors && input[3] ==false }">
+                                    <div class="input-group-append" *ngIf="rankuser =='ADMIN' || rankuser== 'CEO' || rankuser=='SELL'">
+                                        <button class="btn btn-outline-secondary" type="button" (click)='toggleBtn(3)'>แก้ไข</button>
+                                    </div>
+                                    <div *ngIf=" submitSettingSell && checkbill.vat.errors && input[3] == false" class="invalid-feedback">
+                                        <div *ngIf="checkbill.vat.errors.required">กรุณากรอกข้อมูลให้ถูกต้อง</div>
+                                        <div *ngIf="checkbill.vat.errors.pattern">กรุณากรอกตัวเลข Vat</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row  float-right">
+                            <button type="submit" class="btn btn-outline-success mt-1">ยืนยัน</button>
+                        </div>
+
+                        <!--  uploadfile -->
+                        <!-- <div class="row  mb-3">
+                            <div class="col-3 mt-2">
+                                <div class="row">
+                                    <div class="col-8">Upload โลโก้</div>
+                                    <div class="col-4 mb-3"> <img *ngIf="fileName != null" src="{{imgUrl}}" width="60" height="60" style="margin-top: -15px; margin-left: -10px;"></div>
+                                </div>
+                            </div>
+                            <div class="col-7">
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" accept="image/*" (change)="onFileChange($event)">
+                                        <label class="custom-file-label" for="inputGroupFile04">{{fileName}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2" *ngIf="rankuser =='ADMIN' || rankuser== 'CEO'">
+                                <button class="btn btn-sm btn-outline-success mt-1 float-right" type="button" (click)="uploadFile()">Upload file</button>
+                            </div>
+                        </div> -->
+
+                        <div class="col text-center mt-5">
+                            Powered By
+                            <p class="font-opt">3MeeDeveloper</p>
+                        </div>
+                    </form>
+                </div>
+
+
+                <!-- settinguser -->
+                <div class="tab-pane fade" id="account" role="tabpanel">
+                    <div class='row d-flex  between mt-2 mb-2 setting-bordor'>
+                        <span class="material-icons mr-2">
+                            account_circle
+                        </span>
+                        <p class="font-opt">การตั้งค่าบัญชี</p>
+                    </div>
+                    <form [formGroup]="settingData">
+                        <div class="row mt-3 mb-2">
+                            <div class="col-3 mt-2">
+                                ชื่อ
+                            </div>
+                            <div class="col-6">
+                                <input type="text" disabled formControlName="userName" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-3 mt-2">
+                                rank
+                            </div>
+                            <div class="col-6">
+                                <input type="text " disabled formControlName="rank" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-3 mt-2">
+                                รหัสผ่านเดิม
+                            </div>
+                            <div class="col-6">
+                                <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitCheck&& checkValid.password.errors}">
+                                <div *ngIf="submitCheck && checkValid.password" class="invalid-feedback">
+                                    <div *ngIf="(submitCheck&&checkValid.password.errors)">กรุณากรอกรหัสผ่าน</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-3 mt-2">
+                                รหัสผ่านใหม่
+                            </div>
+                            <div class="col-6">
+                                <!-- <input type="password" [(ngModel)]="newPasswd" [ngModelOptions]="{standalone: true}" class="form-control"> -->
+                                <input type="password" formControlName="newPasswd" class="form-control" [ngClass]="{ 'is-invalid': submitCheck&& checkValid.newPasswd.errors}">
+                                <div *ngIf="submitCheck && checkValid.newPasswd" class="invalid-feedback">
+                                    <div *ngIf="(submitCheck&&checkValid.newPasswd.errors)">กรุณากรอกรหัสผ่านใหม่</div>
+                                </div>
+                            </div>
+                            <div class="col-sm">
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-3 mt-2">
+                                เบอร์โทรศัพท์
+                            </div>
+                            <div class="col-6">
+                                <input type="text" formControlName="userTel" class="form-control" [ngClass]="{ 'is-invalid': submitCheck && checkValid.userTel.errors }">
+                                <div *ngIf="submitCheck && checkValid.userTel.errors" class="invalid-feedback">
+                                    <div *ngIf="checkValid.userTel.errors.required">กรุณากรอกเบอร์โทร</div>
+                                    <div *ngIf="checkValid.userTel.errors.pattern">กรุณากรอกเป็นตัวเลข</div>
+                                    <div *ngIf="checkValid.userTel.errors.maxlength">กรอกเบอร์โทรศัพท์ให้ครบ10ตัว</div>
+                                    <div *ngIf="checkValid.userTel.errors.minlength">กรอกเบอร์โทรศัพท์ให้ครบ10ตัว</div>
+                                </div>
+                            </div>
+                            <div class="col-sm">
+                            </div>
+                        </div>
+                        <div class="row float-right">
+                            <button type="submit" class="btn btn-outline-success " (click)="checkUserAndPass()">แก้ไข</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

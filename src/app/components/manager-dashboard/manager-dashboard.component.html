@@ -1,0 +1,209 @@
+<div class="container-fluid" style="vertical-align: middle; margin: auto;" *ngIf=" getDataProduct == undefined || getIncomeData == undefined || (this.nameProduct == [] || this.amountProduct == [])">
+    <mat-spinner style="margin: auto; vertical-align: middle;" class="spiner"></mat-spinner>
+</div>
+
+<div *ngIf=" getDataProduct != undefined || getIncomeData != undefined || (this.nameProduct != [] || this.amountProduct != [])">
+    <div class="container-fluid bg-top">
+        <h1 class="title-style">Dashboard</h1>
+        <!-- ส่วนของ Dashboard -->
+        <div class="col">
+            <div class="row py-4 justify-content-center">
+                <div class="col-lg-2">
+                    <div class="card bg-dash-receive text-white mb-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="mr-3">
+                                    <div class="text-lg font-weight-bold" type="number" *ngIf="income == 0">0</div>
+                                    <div class="text-lg font-weight-bold" style="font-size: 18px;" type="number" *ngIf="income != 0">{{income}}</div>
+
+                                </div>
+                                <span class="material-icons ">paid</span>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex align-items-center justify-content-between">
+                            <div class="text-white" style="font-size: 15px;">รายรับวันนี้</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-2">
+                    <div class="card bg-dash-pay text-white mb-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="mr-3">
+                                    <div class="text-lg font-weight-bold" type="number" style="font-size: 18px;">{{cost}}</div>
+                                </div>
+                                <span class="material-icons">paid</span>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex align-items-center justify-content-between">
+                            <div class="text-white" style="font-size: 15px;">ต้นทุน</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="card bg-dash-lucre text-white mb-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="mr-3">
+                                    <div class="text-lg font-weight-bold" style="font-size: 18px;">{{income - cost}}</div>
+                                </div>
+                                <span class="material-icons">paid</span>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex align-items-center justify-content-between">
+                            <div class="text-white-75" style="font-size: 15px;">กำไรวันนี้</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="card bg-dash-list text-white mb-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="mr-3">
+                                    <div class="text-lg font-weight-bold" style="font-size: 18px;">{{counterItem}} รายการ</div>
+                                </div>
+                                <span class="material-icons">paid</span>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex align-items-center justify-content-between">
+                            <div class="text-white-75" style="font-size: 15px;">ยอดคำสั่งซื้อประจำวัน</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid ">
+        <div class="row">
+            <div class="col-lg-2 card-shadow ">
+                <div class="col">
+                    <div class="row">
+                        <h1 class="pt-4 font-opt text-success">ประวัติการขายสินค้า</h1>
+                    </div>
+                    <div class="row">
+                        <div class="text-center">
+                            <mat-radio-group aria-labelledby="radio-group-label" class="radio-group" [(ngModel)]="chooseOption">
+                                <mat-radio-button class="radio-button " *ngFor="let choose of option" [value]="choose">
+                                    {{choose}}</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                        <div class="btn btn-info form-control" (click)="addTab()" (click)="chartToday()" data-toggle="modal" data-target="#modalToday">ค้นหา</div>
+                    </div>
+                    <!--<div class="row">
+                        <div class="ml-2 float-right">
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field appearance="outline" style="width:10rem;">
+                                        <mat-label>ค้นหาตามวันที่</mat-label>
+                                        <mat-date-range-input [formGroup]="dateRange" [rangePicker]="picker">
+                                            <input matStartDate formControlName="start" placeholder="Start date">
+                                            <input matEndDate formControlName="end" placeholder="End date">
+                                        </mat-date-range-input>
+                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-date-range-picker #picker>
+                                            <mat-date-range-picker-actions>
+                                                <button mat-button matDateRangePickerCancel>ยกเลิก</button>
+                                                <button mat-raised-button color="primary" matDateRangePickerApply (click)="findDatePicker()" (click)="chartToday()" data-toggle="modal" data-target="#modalToday">ยืนยัน</button>
+                                            </mat-date-range-picker-actions>
+                                        </mat-date-range-picker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <button class="btn btn-outline-success ml-2 float-right mt-4" (click)="onGetAll()">Reset
+                                </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+
+            <div class="col-lg-8 ">
+                <div class="container-fluid card-shadow pt-4">
+                    <h1 class="font-opt text-success">กราฟแสดงยอดขาย</h1>
+                    <canvas id="chartResults"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-2 card card-shadow ">
+                <div class="container-fluid pt-4">
+                    <h1 class="font-opt text-success">สินค้าขายดีประจำเดือน</h1>
+                    <div class="row" style="vertical-align: bottom;" *ngFor="let list of  bestSeller">
+                        <div class="col-9">
+                            <div class="float-left">{{list.productName}} <br> {{list.price}} .-</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="float-right ">{{list.amount}} <br> sold</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- ส่วนของ Modal -->
+    <div class=" modal fade bottom modal-size" id="modalToday" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-full-width">
+            <div class="modal-content modal-content-full-width">
+                <div class="modal-header modal-header-full-width modal-header-bg text-white">
+                    <h1 id="exampleModalLabel ">{{chooseOption}}</h1>
+                    <input class="form-control float-right" style="width: 10rem;" [(ngModel)]="searchText" placeholder="ค้นหาข้อมูลสินค้า ">
+                </div>
+                <div class="modal-body ">
+                    <div class="row ">
+                        <div class="col-md-6">
+                            <div class="container ">
+                                <canvas id="chartToday"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="container ">
+                                <mat-tab-group class="ml-2 " [selectedIndex]="selected.value " (selectedIndexChange)="selected.setValue($event) ">
+                                    <mat-tab *ngFor=" let tab of tabs; let index=index " [label]="tab ">
+                                        <table class="table table-bordered ">
+                                            <thead class="text-center bg-secondary " style="color: #ffffff; ">
+                                                <tr>
+
+                                                    <th scope="col " style="width: 25rem; ">ชื่อสินค้า</th>
+                                                    <th scope="col " style="width: 8rem; ">จำนวนที่ขาย</th>
+                                                    <th scope="col " style="width: 8rem; ">ราคาต่อชิ้น</th>
+                                                    <th scope="col " style="width: 8rem; ">ราคาทั้งหมด</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let i of dataProduct | filter: searchText||filterType | paginate : config ">
+                                                    <td>
+                                                        <div class="text-left ">{{i.productName}}</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="text-center ">{{i.amount}}</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="text-right ">{{i.price}}</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="text-right ">{{i.totalPrice}}</div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="pagination float-right ">
+                                            <pagination-controls maxSize="20 " responsiv="true " previousLabel="ก่อนหน้า " nextLabel="ถัดไป " (pageChange)="onPageChange($event) ">
+                                            </pagination-controls>
+                                        </div>
+                                    </mat-tab>
+                                </mat-tab-group>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer modal-footer-full-width bg-secondary ">
+                    <button type="button " class="btn btn-secondary " data-dismiss="modal ">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

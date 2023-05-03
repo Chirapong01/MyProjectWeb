@@ -1,0 +1,21 @@
+<h1 >ตัวกรอง</h1>
+  <label id="example-radio-group-label">เลือกหัวข้อที่ต้องการค้นหา</label>
+  <div class="col">
+    <div class="row">
+      <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+        [(ngModel)]="favoriteSeason">
+        <div class="col">
+          <mat-radio-button class="example-radio-button" *ngFor="let season of seasons" [value]="season">
+            {{season}}
+          </mat-radio-button>
+        </div>
+        <label id="example-radio-group-label">เลือกจากวันที่</label>
+      </mat-radio-group>
+    </div>
+  </div>
+  <div>ยืนยัน : {{favoriteSeason}}</div>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>ยกเลิก</button>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial >ค้นหา</button>
+  </mat-dialog-actions>
+

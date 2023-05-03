@@ -1,0 +1,89 @@
+<div class="body wrapper" *ngIf="statusLogin == 'login'">
+    <div class="container-fluid container-mainpage">
+        <nav class="navbar navbar-expand-lg" id="navStyle">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse">
+                <div class="navbar fstlogoShop">SHOP</div>
+                <div class="navbar secLogoShop mr-4">STORE</div>
+                <ul class="navbar-nav mr-auto mt-lg-0 text-center">
+                    <li class="nav-item" *ngIf="dataUser == 'CEO' || dataUser == 'ADMIN'">
+                        <a class="nav-link text menuBar" [routerLink]="['/manager-dashboard']" [class.changestyle]='statusNav[0]' (click)="checkColor('0')">ผู้จัดการ</a>
+                    </li>
+                    <li class="nav-item" *ngIf="dataUser == 'CEO' || dataUser == 'ADMIN' || dataUser == 'SELL'">
+                        <a class="nav-link text menuBar" [routerLink]="['/sell-main']" [class.changestyle]='statusNav[1]' (click)="checkColor('1')">พนักงานขาย</a>
+                    </li>
+                    <li class="nav-item" *ngIf="dataUser == 'CEO' || dataUser == 'ADMIN' || dataUser == 'STOCK'">
+                        <a class="nav-link text menuBar" [routerLink]="['/stock-balance']" [class.changestyle]='statusNav[2]' (click)="checkColor('2')">พนักงานคลัง</a>
+                    </li>
+                    <li class="nav-item" *ngIf="dataUser == 'CEO' || dataUser == 'ADMIN' || dataUser == 'SELL'">
+                        <a class="nav-link text menuBar" [routerLink]="['/member-create']" [class.changestyle]='statusNav[3]' (click)="checkColor('3')">สมาชิก</a>
+                    </li>
+                    <li class="nav-item" *ngIf="dataUser == 'CEO' || dataUser == 'ADMIN' || dataUser == 'SELL' || dataUser == 'STOCK'">
+                        <a class="nav-link text menuBar" [routerLink]="['/product-detail']" [class.changestyle]='statusNav[4]' (click)="checkColor('4')">ข้อมูลสินค้า</a>
+                    </li>
+                    <li class="nav-item" *ngIf="dataUser == 'CEO' || dataUser == 'ADMIN' || dataUser == 'SELL'">
+                        <a class="nav-link text menuBar" [routerLink]="['/sell-history']" [class.changestyle]='statusNav[5]' (click)="checkColor('5')">ประวัติการขาย</a>
+                    </li>
+                    <li class="nav-item" *ngIf="dataUser == 'CEO' || dataUser == 'ADMIN'">
+                        <a class="nav-link text menuBar" [routerLink]="['/user-detail']" [class.changestyle]='statusNav[6]' (click)="checkColor('6')">ข้อมูลบัญชีผู้ใช้งาน</a>
+                    </li>
+                </ul>
+                <div class="form-inline my-2 my-lg-0">
+                    <div class="form-group">
+                        <div type="button" class="text material-icons mr-3 mt-1 text-secondary" [routerLink]="['/setting']" [class.changestyle]='statusNav[7]' (click)="checkColor('7')" data-toggle="modal" title="ตั้งค่า">
+                            settings
+                        </div>
+                        <button class="btn btn-outline-secondary" (click)="logout()" type="submit">ออกจากระบบ</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <router-outlet></router-outlet>
+    </div>
+</div>
+
+
+<!-- login -->
+<div class="container-fluid" *ngIf="statusLogin == 'logout' || statusLogin == null">
+    <div class="row" style="padding-top: 12%;">
+        <div class="col-sm"></div>
+        <div class="col-sm ">
+            <form [formGroup]="formLogin" (ngSubmit)="checkUserAndPass()">
+                <div class="card">
+                    <div class="card-head py-3">
+                        <h1 class="text-center text-white mt-3">
+                            <div> 3MeeShop</div>
+                        </h1>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <span class="material-icons ">
+                                account_circle
+                            </span>
+                            <label class="pl-1">Username</label>
+                            <input type="text" class="form-control" formControlName="userName" [ngClass]="{'is-invalid': submitLogin}" (ngModelChange)="onChange()">
+                            <div class="invalid-feedback" *ngIf="statusUsername == false && formValidLogin.userName.errors">
+                                กรุณากรอกชื่อบัญชี
+                            </div>
+                            <div class="invalid-feedback" *ngIf="statusUsername == true">
+                                บัญชีผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <span class="material-icons">
+                                vpn_key
+                            </span>
+                            <label class="pl-1">Password</label>
+                            <input type="password" class="form-control" formControlName="password" (ngModelChange)="onChange()">
+                            <button type="submit" class="btn btn-success btn-lg btn-block mt-5 ">เข้าสู่ระบบ</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm">
+        </div>
+    </div>
+</div>

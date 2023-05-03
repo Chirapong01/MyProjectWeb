@@ -1,0 +1,152 @@
+.title-style {
+    font-size: 50px;
+    font-weight: 700;
+    padding-top: 2rem;
+    padding-left: 2rem;
+    color: rgb(215, 215, 224);
+}
+
+.bg-top {
+    background-image: url('https://cdn.pixabay.com/photo/2021/04/07/17/13/sea-6159674_960_720.jpg');
+    /* background-position: center */
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+
+.bg-dash-receive {
+    background-color: #5ac6e7;
+}
+
+.bg-dash-pay {
+    background-color: #e94452;
+}
+
+.bg-dash-lucre {
+    background-color: #5ecf71;
+}
+
+.bg-dash-sumary {
+    background-color: #c27af1;
+}
+
+.bg-dash-list {
+    background-color: #923262;
+}
+
+.progress-mp {
+    margin-bottom: 1rem;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+}
+
+.radio-button {
+    margin: 5px;
+}
+
+.filter-style {
+    margin-left: 1rem;
+    padding-left: 1rem;
+}
+
+.filter-style-item {
+    padding-left: 1rem;
+}
+
+.search-style {
+    padding-top: 2rem;
+    padding-left: 2rem;
+}
+
+.card-shadow {
+    display: block;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-clip: border-box;
+    border-radius: 0.35rem;
+    box-shadow: 0 0 0.9em 1px #cec9c9;
+}
+
+.card-dist {
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+.card-body {
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 1.35rem;
+}
+
+.card-footer {
+    padding: 1rem 1.35rem;
+    background-color: rgba(33, 40, 50, 0.03);
+    border-top: 1px solid rgba(33, 40, 50, 0.125);
+}
+
+.align-items-center {
+    align-items: center !important;
+}
+
+.justify-content-between {
+    justify-content: space-between !important;
+}
+
+.d-flex {
+    display: flex !important;
+}
+
+.modal-dialog-full-width {
+    width: 50%;
+    height: 50%;
+    min-height: 60%;
+    min-width: 90%;
+    position: relative;
+}
+
+.modal-content-full-width {
+    /* min-height: 100%; */
+    border-radius: 10px;
+    background-color: #e7e7e7
+}
+
+.modal-header-full-width {
+    border-bottom: 1px solid #313131;
+}
+
+.modal-footer-full-width {
+    border-top: 1px solid #00b800;
+}
+
+.mat-form-field-appearance-outline {
+    margin-top: 1rem;
+}
+
+.modal-header-bg {
+    background-color: #313131;
+}
+
+.size-progress {
+    height: 1rem;
+    border-radius: 5px;
+}
+
+.table-layout {
+    width: 60px;
+    height: 40px;
+}
+
+th,
+td {
+    vertical-align: middle;
+}
+
+.font-opt {
+    color: #000000;
+    font-size: 20px;
+    font-weight: bold;
+}

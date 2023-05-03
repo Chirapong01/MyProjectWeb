@@ -1,0 +1,255 @@
+<!-- ดูสินค้า ค้นหาสินค้า -->
+<div class="card-body container-fluid">
+    <div class="row mb-2 ml-1 mr-1">
+        <div class="col">
+            <div class="row">
+                <div class="input-group w-350px">
+                    <input class="form-control w-200px bg-invisible" type="text" [(ngModel)]="searchText" placeholder="ค้นหาข้อมูลสินค้า">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-product dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            ประเภทสินค้า
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <div class="item-dropdown mt-2" *ngFor="let item of typeFilter;let i = index">
+                                <a (click)="checkFilterType(item)">{{item}}</a>
+                            </div>
+                            <div class="item-dropdown mt-2 mb-2">
+                                <a (click)="checkFilterType(null)">ดูทั้งหมด</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col text-center text-success">
+            <h1>ข้อมูลสินค้า</h1>
+        </div>
+        <div class="col">
+            <div class="row float-right">
+                <button class="btn btn-outline-success mb-2" data-toggle="modal" data-target="#newProduct">
+                    <div class="form-inline">
+                        <div class="mr-2">เพิ่มรายการ</div> 
+                        <div class="material-icons">add_circle_outline</div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <mat-spinner class="spiner" *ngIf="receiveProduct==null"></mat-spinner>
+        <table class="table table-bordered" *ngIf="receiveProduct!=null" id="table-center">
+            <thead class="text-success" id="head-style">
+                <tr>
+                    <th scope="col">รหัสสินค้า</th>
+                    <th scope="col">ข้อมูลสินค้า</th>
+                    <th scope="col">ประเภทสินค้า</th>
+                    <th scope="col" class="w-200px">ราคา</th>
+                    <th scope="col" class="w-200px">จำนวนคงเหลือ</th>
+                    <th scope="col" class="w-200px">แก้ไข</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let prod of receiveProduct | filter: searchText||filterType | paginate: config">
+                <td scope="row">{{prod.productId}}</td>
+                <td>
+                    <div class="row">
+                        <div class="col ml-5 w-170px">
+                            <div class="row">ชื่อสินค้า : {{prod.productName}}</div>
+                            <div class="row">ยี่ห้อสินค้า : {{prod.brand}}</div>
+                            <div class="row">รุ่นสินค้า : {{prod.model}}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>{{prod.type}}</td>
+                <td>
+                    <div class="row">
+                        <div class="col ml-5 w-170px">
+                            <div class="row">ราคาลูกค้าทั่วไป : {{prod.price1}}</div>
+                            <div class="row">ราคาสมาชิก : {{prod.price2}}</div>
+                            <div class="row">ราคาลูกค้า VIP : {{prod.price3}}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class='text-right pr-5'>{{prod.balance}}</td>
+                <td class="text-center">
+                    <div class="btn-group">
+                        <div class="text-8D6E63 material-icons" type="button" data-toggle="modal" title="แก้ไขข้อมูล" data-target="#editProduct" (click)="getProductById(prod.productId)">edit</div>
+                    </div>
+                </td>
+            </tbody>
+        </table>
+        <div class="pagination float-right">
+            <pagination-controls maxSize="7" responsive="true" previousLabel="ก่อนหน้า" nextLabel="ถัดไป" (pageChange)="onPageChange($event)">
+            </pagination-controls>
+        </div>
+    </div>
+</div>
+
+<!-- เพิ่มสินค้า -->
+<div class="modal fade" id="newProduct" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="memberModal">เพิ่มรายการสินค้า</div>
+                <button type="button" #closebuttonAdd class="close" hidden="true" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="formAdd" (ngSubmit)="newProduct()">
+                    <div class="form-row">
+                        <div class="form-group col-md">
+                            <label for="productId">รหัสสินค้า</label>
+                            <input formControlName="productId" [ngClass]="{'is-invalid': submitAdd && formValidAdd.productId.errors}" class="form-control" type="text">
+                            <div class="invalid-feedback" *ngIf="submitAdd && formValidAdd.productId.errors">
+                                <div *ngIf="formValidAdd.productId.errors.required">กรุณากรอกรหัสสินค้า</div>
+                                <div *ngIf="formValidAdd.productId.errors.pattern">a-z 0-9</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md">
+                            <label for="productName">ชื่อสินค้า</label>
+                            <input formControlName="productName" [ngClass]="{'is-invalid': submitAdd && formValidAdd.productName.errors}" class="form-control" type="text">
+                            <div class="invalid-feedback" *ngIf="submitAdd && formValidAdd.productName.errors">
+                                <div *ngIf="formValidAdd.productName.errors.required">กรุณากรอกชื่อสินค้า</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md">
+                            <label for="brand">ยี่ห้อสินค้า</label>
+                            <input formControlName="brand" [ngClass]="{'is-invalid': submitAdd && formValidAdd.brand.errors}" class="form-control" type="text">
+                            <div class="invalid-feedback" *ngIf="submitAdd && formValidAdd.brand.errors">
+                                <div *ngIf="formValidAdd.brand.errors.required">กรุณากรอกยี่ห้อสินค้า</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md">
+                            <label for="model">รุ่นสินค้า</label>
+                            <input formControlName="model" [ngClass]="{'is-invalid': submitAdd && formValidAdd.model.errors}" class="form-control" type="text">
+                            <div class="invalid-feedback" *ngIf="submitAdd && formValidAdd.model.errors">
+                                <div *ngIf="formValidAdd.model.errors.required">กรุณากรอกรุ่นสินค้า</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="formgroup col-md">
+                            <label for="type">ประเภทสินค้า</label>
+                            <input formControlName="type" [ngClass]="{'is-invalid': submitAdd && formValidAdd.type.errors}" class="form-control" type="text">
+                            <div class="invalid-feedback" *ngIf="submitAdd && formValidAdd.type.errors">
+                                <div *ngIf="formValidAdd.type.errors.required">กรุณากรอกประเภทสินค้า</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md">
+                            <label for="price1">ราคาลูกค้าทั่วไป</label>
+                            <input formControlName="price1" [ngClass]="{'is-invalid': submitAdd && formValidAdd.price1.errors}" class="form-control" type="number">
+                            <div class="invalid-feedback" *ngIf="submitAdd && formValidAdd.price1.errors">
+                                <div *ngIf="formValidAdd.price1.errors.required">กรุณากรอกราคาขายปลีก</div>
+                                <div *ngIf="formValidAdd.price1.errors.pattern">0-9</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md">
+                            <label for="price2">ราคาสมาชิก</label>
+                            <input formControlName="price2" [ngClass]="{'is-invalid': submitAdd && formValidAdd.price2.errors}" class="form-control" type="number">
+                            <div class="invalid-feedback" *ngIf="submitAdd && formValidAdd.price2.errors">
+                                <div *ngIf="formValidAdd.price2.errors.required">กรุณากรอกราคาสมาชิก</div>
+                                <div *ngIf="formValidAdd.price2.errors.pattern">0-9</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md">
+                            <label for="price3">ราคาลูกค้า VIP</label>
+                            <input formControlName="price3" [ngClass]="{'is-invalid': submitAdd && formValidAdd.price3.errors}" class="form-control" type="number">
+                            <div class="invalid-feedback" *ngIf="submitAdd && formValidAdd.price3.errors">
+                                <div *ngIf="formValidAdd.price3.errors.required">กรุณากรอกราคาVIP</div>
+                                <div *ngIf="formValidAdd.price3.errors.pattern">0-9</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-outline-primary">ยืนยัน</button>
+                        <button type="button" (click)="closeproduct()" class="btn btn-outline-secondary" data-dismiss="modal">ยกเลิก</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- แก้ไขสินค้า -->
+<div class="modal fade" id="editProduct" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" *ngIf="receiveProductById != null">
+            <div class="modal-header">
+                <div class="memberModal">แก้ไขรายการสินค้า</div>
+                <button type="button" #closebuttonDelete class="close" hidden="true" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="formEdit" (ngSubmit)="editProduct(receiveProductById.productId)">
+                    <div class="form-row">
+                        <div class="form-group col-md">
+                            <label for="productId">รหัสสินค้า</label>
+                            <input formControlName="productId" disabled="true" class="form-control" type="text">
+                        </div>
+                        <div class="form-group col-md">
+                            <label for="productName">ชื่อสินค้า</label>
+                            <input formControlName="productName" [ngClass]="{'is-invalid': submitEdit && formValidEdit.productName.errors}" class="form-control" type="text">
+                            <div class="invalid-feedback" *ngIf="submitEdit && formValidEdit.productName.errors">
+                                <div *ngIf="formValidEdit.productName.errors.required">กรุณากรอกชื่อสินค้า</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md">
+                            <label for="brand">ยี่ห้อสินค้า</label>
+                            <input formControlName="brand" [ngClass]="{'is-invalid': submitEdit && formValidEdit.brand.errors}" class="form-control" type="text">
+                            <div class="invalid-feedback" *ngIf="submitEdit && formValidEdit.brand.errors">
+                                <div *ngIf="formValidEdit.brand.errors.required">กรุณากรอกยี่ห้อสินค้า</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md">
+                            <label for="model">รุ่นสินค้า</label>
+                            <input formControlName="model" [ngClass]="{'is-invalid': submitEdit && formValidEdit.model.errors}" class="form-control" type="text">
+                            <div class="invalid-feedback" *ngIf="submitEdit && formValidEdit.model.errors">
+                                <div *ngIf="formValidEdit.model.errors.required">กรุณากรอกรุ่นสินค้า</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="formgroup col-md">
+                            <label for="type">ประเภทสินค้า</label>
+                            <input formControlName="type" [ngClass]="{'is-invalid': submitEdit && formValidEdit.type.errors}" class="form-control" type="text">
+                            <div class="invalid-feedback" *ngIf="submitEdit && formValidEdit.type.errors">
+                                <div *ngIf="formValidEdit.type.errors.required">กรุณากรอกประเภทสินค้า</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md">
+                            <label for="price1">ราคาลูกค้าทั่วไป</label>
+                            <input formControlName="price1" [ngClass]="{'is-invalid': submitEdit && formValidEdit.price1.errors}" class="form-control" type="number">
+                            <div class="invalid-feedback" *ngIf="submitEdit && formValidEdit.price1.errors">
+                                <div *ngIf="formValidEdit.price1.errors.required">กรุณากรอกราคาขายปลีก</div>
+                                <div *ngIf="formValidEdit.price1.errors.pattern">0-9</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md">
+                            <label for="price2">ราคาสมาชิก</label>
+                            <input formControlName="price2" [ngClass]="{'is-invalid': submitEdit && formValidEdit.price2.errors}" class="form-control" type="number">
+                            <div class="invalid-feedback" *ngIf="submitEdit && formValidEdit.price2.errors">
+                                <div *ngIf="formValidEdit.price2.errors.required">กรุณากรอกราคาสมาชิก</div>
+                                <div *ngIf="formValidEdit.price2.errors.pattern">0-9</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md">
+                            <label for="price3">ราคาลูกค้า VIP</label>
+                            <input formControlName="price3" [ngClass]="{'is-invalid': submitEdit && formValidEdit.price3.errors}" class="form-control" type="number">
+                            <div class="invalid-feedback" *ngIf="submitEdit && formValidEdit.price3.errors">
+                                <div *ngIf="formValidEdit.price3.errors.required">กรุณากรอกราคาVIP</div>
+                                <div *ngIf="formValidEdit.price3.errors.pattern">0-9</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer row">
+                        <div class="float-left col">
+                            <button type="button" class="btn btn-outline-danger" (click)="deleteProduct(receiveProductById.productId)" [hidden]="_readOnly">ลบสินค้า</button>
+                        </div>
+                        <button type="submit" class="btn btn-outline-primary" [hidden]="_readOnly">ยืนยัน</button>
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">ยกเลิก</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

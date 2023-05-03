@@ -1,0 +1,94 @@
+/* stock */
+
+.card {
+    background-color: lavender;
+}
+
+.center-stock {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 24px;
+}
+
+.text-313131 {
+    color: #313131;
+}
+
+
+/* modal add */
+
+.text-center-add {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.billId {
+    padding-right: 2px;
+}
+
+.buttonAdd {
+    float: right;
+    margin-right: 6px;
+}
+
+.submitProduct {
+    margin: 20px;
+}
+
+
+/* modal data */
+
+.modal-titl {
+    margin-top: 10px;
+    margin-left: 550px;
+    font-size: 20px;
+}
+
+.data-border {
+    border: 1px solid black;
+    padding: 10px;
+    margin: 20px;
+}
+
+.modal-header-data {
+    background-color: #313131;
+    color: white;
+}
+
+.h1-text-center {
+    text-align: center;
+    margin-top: 20px;
+}
+
+button.form-control {
+    background-color: lavender;
+}
+
+.modal-dialog {
+    min-width: 40%;
+}
+
+.stockModal {
+    font-size: large;
+    font-weight: bold;
+    margin: auto;
+}
+
+#head-style {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.spiner {
+    margin: auto;
+    margin-top: 10rem;
+}
+
+th,
+td {
+    vertical-align: middle;
+}
+
+mat-form-field {
+    zoom: 0.75;
+}

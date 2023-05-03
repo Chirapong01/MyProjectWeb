@@ -1,0 +1,113 @@
+.card-header {
+    border: white;
+    background: #ffffff00;
+}
+
+.card-header .row .col .form-group {
+    padding-right: 0;
+    width: 300px;
+}
+
+.container-fluid {
+    zoom: 0.85;
+}
+
+.card-body {
+    padding: 0px;
+    height: 50vh;
+    margin: auto;
+    overflow-y: auto;
+}
+
+.card-footer {
+    zoom: 0.95;
+    border: white;
+    background: #ffffff00;
+    margin: auto;
+    position: fixed;
+    padding-right: 60px;
+    width: 100%;
+    bottom: 10px;
+}
+
+.card-footer label {
+    font-size: 14px;
+    color: #495057;
+}
+
+.scan-product-footer {
+    box-shadow: #7a7777;
+    box-shadow: 0px 0px 0px 0.1px #7a7777;
+    padding-bottom: 2px;
+    padding-top: 5px;
+}
+
+.form-control {
+    background-color: #ffffff00;
+}
+
+.text-border-white {
+    border: white;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.font-16 {
+    font-size: 16px;
+    color: #495057;
+}
+
+.font-20 {
+    font-size: 20px;
+    color: #495057;
+}
+
+.p-l-0 {
+    padding-left: 0px;
+}
+
+.w-150px {
+    width: 150px;
+}
+
+.w-200px {
+    width: 200px;
+}
+
+.input-amount {
+    border: white;
+    background: #f2f6fc;
+}
+
+.box-product {
+    box-shadow: 0 0 1px 1px black;
+}
+
+table thead {
+    background: #313131;
+}
+
+.table-delete-outline {
+    text-align: center;
+    color: orangered;
+    width: 100px;
+}
+
+.bg-invisible {
+    background: #ffffff00;
+}
+
+.bottom {
+    position: absolute;
+    bottom: 0px;
+}
+
+.btn-add-product {
+    position: fixed;
+    right: 0px;
+    margin-top: -50px;
+}
+
+th,
+td {
+    vertical-align: middle;
+}

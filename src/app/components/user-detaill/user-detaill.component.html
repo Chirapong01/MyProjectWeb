@@ -1,0 +1,210 @@
+<div class="card-body container-fluid">
+    <div class="row mb-2 ml-1 mr-1">
+        <div class="col">
+            <div class="row float-left">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text material-icons bg-invisible ">
+                            search
+                        </span>
+                    </div>
+                    <input type="text" class="form-control bg-invisible " [(ngModel)]="searchText" placeholder="ค้าหาข้อมูลบัญชีผู้ใชงาน">
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <h1 class="text-center mt-2 text-success"> ข้อมูลบัญชีผู้ใช้งาน </h1>
+        </div>
+        <div class="col">
+            <div class="row float-right">
+                <button class="btn btn-outline-success" data-toggle="modal" data-target="#register">
+                    <div class="form-inline">
+                        <div class="mr-2">ผู้ใช้งานใหม่</div>
+                        <div class="material-icons">add_circle_outline</div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <mat-spinner class="spiner" *ngIf="getAllUser==null"></mat-spinner>
+        <table class="table table-bordered" *ngIf="getAllUser!=null">
+            <thead class="text-center text-success" id="head-style">
+                <tr>
+                    <th class="w-50px" scope="col">ID</th>
+                    <th class="w-200px" scope="col">ชื่อผู้ใช้งาน</th>
+                    <th class="w-150px" scope="col">รหัสผ่าน</th>
+                    <th class="w-150px" scope="col">เบอร์โทร</th>
+                    <th class="w-100px" scope="col">rank</th>
+                    <th class="w-100px" scope="col">แก้ไข/ลบ</th>
+                </tr>
+            </thead>
+            <tbody class="text-right">
+                <tr *ngFor="let i of getAllUser | paginate : config  | filter : searchText  ">
+                    <td class="text-center"> {{i.userId }}</td>
+                    <td class="text-left pl-5">{{i.userName}}</td>
+                    <td class="text-center">{{i.password}}</td>
+                    <td class="text-center">{{i.userTel}}</td>
+                    <td class="text-center">
+                        <div *ngIf="i.rank =='SELL' ">พนักงานขาย</div>
+                        <div *ngIf="i.rank =='STOCK' ">พนักงานคลัง</div>
+                        <div *ngIf="i.rank =='CEO' "> ผู้บริหาร</div>
+                        <div *ngIf="i.rank =='ADMIN' ">ผู้ดูแลระบบ</div>
+                    </td>
+                    <td class="text-center">
+                        <div class="btn-group mr-2">
+                            <button class="text-8D6E63 text-secondary material-icons mr-2" type="button" data-toggle="modal" data-target="#editUser" data-placement="top" title="แก้ไขข้อมูล" (click)="getUserId(i.userId)" *ngIf="dataUser == 'CEO' && i.rank=='ADMIN'" [disabled]="true">edit</button>
+                            <button class="text-8D6E63  material-icons mr-2" type="button" data-toggle="modal" data-target="#editUser" data-placement="top" title="แก้ไขข้อมูล" (click)="getUserId(i.userId)" *ngIf="dataUser == 'ADMIN' || (dataUser == 'CEO' && i.rank !='ADMIN')" [disabled]="false">edit</button>
+                        </div>
+                        <div class="btn-group">
+                            <button class="text-FF3D00  text-secondary material-icons " *ngIf="dataUser == 'CEO' && i.rank=='ADMIN'" type="button" (click)="deleteUser(i.userId)" data-placement="top" title="ลบข้อมูล" [disabled]="true">
+                                delete_outline</button>
+                            <button class="text-FF3D00 material-icons " *ngIf="dataUser == 'ADMIN' || (dataUser == 'CEO' && i.rank !='ADMIN')" type="button" (click)="deleteUser(i.userId)" data-placement="top" title="ลบข้อมูล" [disabled]="false">
+                                delete_outline</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination float-right mt-1">
+        <pagination-controls maxSize="7" responsiv="true" previousLabel="ก่อนหน้า" nextLabel="ถัดไป" (pageChange)="onPageChage($event)">
+        </pagination-controls>
+    </div>
+</div>
+
+<!-- editModal -->
+<div class="modal fade" id="editUser" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" *ngIf="formEditUser != null">
+            <form [formGroup]="formEditUser" (ngSubmit)="editUser()">
+                <div class="modal-header">
+                    <h1 class="modal-title mg-auto">แก้ไขข้อมูลผู้ใช้งาน</h1>
+                    <button type="button" class="close" hidden="true" data-dismiss="modal" #closebuttonDelete aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="formEditUser">
+                        <div class="form-row">
+                            <div class="form-group col">
+                                <label for="userId">ID</label>
+                                <input class="form-control" type="text" formControlName="userId" disabled>
+                            </div>
+                            <div class="form-group col">
+                                <label for="rank">Rank</label>
+                                <select class="form-control" *ngIf="rankUser =='ADMIN'" disabled>
+                                    <option >ผู้ดูแลระบบ</option>
+                                  </select>
+                                <select class="form-control" *ngIf="rankUser =='CEO'" disabled>
+                                    <option >ผู้บริหาร</option>
+                                  </select>
+                                <select class="form-control" formControlName="rank" *ngIf="rankUser =='SELL'">
+                                  <option value="SELL">พนักงานขาย</option>
+                                  <option value="STOCK">พนักงานคลัง</option>
+                                </select>
+                                <select class="form-control" formControlName="rank" *ngIf="rankUser =='STOCK'">
+                                  <option value="STOCK">พนักงานคลัง</option>
+                                  <option value="SELL">พนักงานขาย</option>
+                                </select>
+                            </div>
+                            <div class="form-group col">
+                                <label for="userName">ชื่อผู้ใช้งาน</label>
+                                <input class="form-control" type="text" formControlName="userName" disabled>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col">
+                                <label for="rank">รหัสผ่าน</label>
+                                <input class="form-control" type="text" formControlName="password" [ngClass]="{'is-invalid': summitModal && formEdituser.password.errors}">
+                                <div class="invalid-feedback" *ngIf="summitModal && formEdituser.password.errors">
+                                    <div *ngIf="formEdituser.password.errors.required">กรุณากรอกรหัสผ่าน</div>
+                                </div>
+                            </div>
+                            <div class="form-group col">
+                                <label for="userTel">เบอร์โทร</label>
+                                <input class="form-control" type="text" formControlName="userTel" [ngClass]="{'is-invalid': summitModal && formEdituser.userTel.errors}">
+                                <div class="invalid-feedback" *ngIf="summitModal && formEdituser.userTel.errors">
+                                    <div *ngIf="formEdituser.userTel.errors.required">กรุณากรอกเบอร์โทร</div>
+                                    <div *ngIf="formEdituser.userTel.errors.pattern">กรุณากรอกเฉพาะตัวเลข 0-9</div>
+                                    <div *ngIf="formEdituser.userTel.errors.minlength">กรุณากรอกให้ครบ</div>
+                                    <div *ngIf="formEdituser.userTel.errors.maxlength">กรุณากรอกให้ครบ</div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-primary">ยืนยัน</button>
+                    <button type="button" class="btn btn-outline-secondary" (click)="closeUser()" data-dismiss="modal">ยกเลิก</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- addUser -->
+<div class="modal fade" id="register" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="userModal">เพิ่มบัญชีผู้ใช้งาน</div>
+                <button type="button" #closebuttonRegister class="close" hidden="true" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="formRegister" (ngSubmit)="registerUser()">
+                    <div class="form-row">
+                        <div class="form-group col-md">
+                            <label for="userId">รหัสบัญชีผู้ใช้</label>
+                            <input formControlName="userId" [ngClass]="{'is-invalid': submit && formRegisterValid.userId.errors}" class="form-control" type="text">
+                            <div class="invalid-feedback" *ngIf="submit && formRegisterValid.userId.errors">
+                                <div *ngIf="formRegisterValid.userId.errors.required">กรุณากรอกรหัสบัญชีผู้ใช้งาน</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md">
+                            <label for="userName">ชื่อบัญชีผู้ใช้</label>
+                            <input formControlName="userName" [ngClass]="{'is-invalid': submit && formRegisterValid.userName.errors}" class="form-control" type="text">
+                            <div class="invalid-feedback" *ngIf="submit && formRegisterValid.userName.errors">
+                                <div *ngIf="formRegisterValid.userName.errors.required">กรุณากรอกชื่อผู้ใช้</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md">
+                            <label for="password">รหัสผ่าน</label>
+                            <input formControlName="password" [ngClass]="{'is-invalid': submit && formRegisterValid.password.errors}" class="form-control" type="text">
+                            <div class="invalid-feedback" *ngIf="submit && formRegisterValid.password.errors">
+                                <div *ngIf="formRegisterValid.password.errors.required">กรุณากรอกรหัสผ่าน</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md">
+                            <label for="userTel">เบอร์โทร</label>
+                            <input formControlName="userTel" [ngClass]="{'is-invalid': submit && formRegisterValid.userTel.errors}" class="form-control" type="text">
+                            <div class="invalid-feedback" *ngIf="submit && formRegisterValid.userTel.errors">
+                                <div *ngIf="formRegisterValid.userTel.errors.required">กรุณากรอกเบอร์โทร</div>
+                                <div *ngIf="formRegisterValid.userTel.errors.pattern">กรุณากรอกเฉพาะตัวเลข 0-9</div>
+                                <div *ngIf="formRegisterValid.userTel.errors.minlength">กรุณากรอกให้ครบ</div>
+                                <div *ngIf="formRegisterValid.userTel.errors.maxlength">กรุณากรอกให้ครบ</div>
+                            </div>
+                        </div>
+                        <div class="formgroup col-md">
+                            <label for="rank">ตำแหน่ง</label>
+                            <select formControlName="rank" [ngClass]="{'is-invalid': submit && formRegisterValid.rank.errors}" class="custom-select form-control">
+                                <option [disabled]="true" selected>เลือกตำแหน่ง</option>
+                                <option value="SELL">พนักงานขาย</option>
+                                <option value="STOCK">พนักงานคลัง</option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="submit && formRegisterValid.rank.errors">
+                                <div *ngIf="formRegisterValid.rank.errors.required">เลือกตำแหน่ง</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer material-icons mt-3">
+                        <button type="submit" class="btn btn-outline-primary">ยืนยัน</button>
+                        <button type="button" class="btn btn-outline-secondary" (click)="closeUser()" data-dismiss="modal">ยกเลิก</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

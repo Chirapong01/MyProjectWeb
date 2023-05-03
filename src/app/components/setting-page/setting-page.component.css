@@ -1,0 +1,86 @@
+.mg-l-400px {
+    margin-left: 400px;
+}
+
+.mg-l-200px {
+    margin-left: 200px;
+}
+
+.mg-t-15 {
+    margin-top: -15px;
+}
+
+.padding-15px-200px {
+    padding: 15px 200px;
+}
+
+.bg-invisible {
+    background: #ffffff00;
+}
+
+.text-btn {
+    color: black;
+    border-color: #ffffff00;
+}
+
+.text-btn:hover {
+    background-color: #696969;
+}
+
+.text-btn:focus {
+    background-color: #808080;
+}
+
+.btn-add {
+    color: #2E8B57;
+    border-color: #2E8B57;
+}
+
+.btn-add:hover {
+    color: white;
+    background-color: #2E8B57;
+}
+
+.btn-del {
+    color: red;
+    border-color: red;
+}
+
+.btn-del:hover {
+    color: white;
+    background-color: red;
+}
+
+.title-style {
+    font-size: 30px;
+    font-weight: 700;
+    padding-top: 2rem;
+    padding-left: 2rem;
+    color: black(215, 215, 224);
+}
+
+.font-opt {
+    color: #00b800;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.text {
+    color: black;
+}
+
+.text:hover {
+    background-color: gray;
+}
+
+.list-group-item {
+    border: #ffffff00;
+}
+
+.setting-bordor {
+    border-bottom: solid 2px;
+}
+
+.changestyle {
+    color: black;
+}
